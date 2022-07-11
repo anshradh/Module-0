@@ -3,6 +3,7 @@ Collection of the core mathematical operators used throughout the code base.
 """
 
 
+from cmath import nan
 import math
 
 # ## Task 0.1
@@ -47,7 +48,12 @@ def max(x, y):
 
 def is_close(x, y):
     ":math:`f(x) = |x - y| < 1e-2`"
-    return abs(x - y) < 1e-2
+    if (x == float("inf") and y == float("inf")) or (
+        x == float("-inf") and y == float("-inf")
+    ):
+        return True
+    else:
+        return abs(x - y) < 1e-2
 
 
 def sigmoid(x):
@@ -68,7 +74,10 @@ def sigmoid(x):
     Returns:
         float : sigmoid value
     """
-    return 1.0 / (1.0 + math.exp(-x))
+    if x >= 0:
+        1.0 / (1.0 + math.exp(-x))
+    else:
+        return math.exp(x) / (1.0 + math.exp(x))
 
 
 def relu(x):
@@ -83,7 +92,7 @@ def relu(x):
     Returns:
         float : relu value
     """
-    return x if x > 0 else 0.0
+    return max(x, 0.0)
 
 
 EPS = 1e-6
@@ -101,20 +110,17 @@ def exp(x):
 
 def log_back(x, d):
     r"If :math:`f = log` as above, compute d :math:`d \times f'(x)`"
-    return d * inv(x * math.log(math.e))
+    return d / (x + EPS)
 
 
 def inv(x):
     ":math:`f(x) = 1/x`"
-    try:
-        return 1 / x
-    except ZeroDivisionError:
-        return 0
+    return 1 / x
 
 
 def inv_back(x, d):
     r"If :math:`f(x) = 1/x` compute d :math:`d \times f'(x)`"
-    return -d / (x ** 2)
+    return -d / x ** 2
 
 
 def relu_back(x, d):
