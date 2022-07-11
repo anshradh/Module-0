@@ -75,7 +75,7 @@ def sigmoid(x):
         float : sigmoid value
     """
     if x >= 0:
-        1.0 / (1.0 + math.exp(-x))
+        return 1.0 / (1.0 + math.exp(-x))
     else:
         return math.exp(x) / (1.0 + math.exp(x))
 
